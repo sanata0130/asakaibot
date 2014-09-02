@@ -14,19 +14,36 @@ client = Twitter::REST::Client.new do |config|
 end
 
 # handler do |job|
-  day = Time.now
-  tomorrow = day + 1
+  today = Date.today
+  tomorrow = today + 1
+
+  def week_of_month(date)
+    p date
+    first_week = (date - (date.day - 1)).cweek
+    this_week = date.cweek
+
+    if this_week < first_week
+
+      if date.month == 12
+        return week_of_month(date - 7) + 1
+      else
+        return this_week + 1
+      end
+    end
+    return this_week - first_week + 1
+  end
 
   def update(client, tweet)
     client.update("朝会#{tweet}です。8:30に出社しましょう。")
   end
 
-  if 6 < tomorrow.mday && tomorrow.mday < 15 && day.wday == 0 then
+  week_today = week_of_month(today)
+  week_tomorrow = week_of_month(tomorrow)
+
+  if week_tomorrow == 2 && today.wday == 1 then
     update(client, '1日前')
-  elsif 7 < tomorrow.mday && tomorrow.mday < 16 && day.wday == 1 then
+  elsif week_today == 2 && today.wday == 1 then
     update(client, '当日')
-  else
-    update(client, 'test')
   end
 # end
 
