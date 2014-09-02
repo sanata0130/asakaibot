@@ -40,11 +40,11 @@ module Clockwork
     week_tomorrow = week_of_month(tomorrow)
 
     if week_tomorrow == 2 && tomorrow.wday == 1 then
-      update(client, '1日前')
+      update(@client, '1日前')
     elsif week_today == 2 && today.wday == 1 then
-      update(client, '当日')
+      update(@client, '当日')
     end
   end
 
-  every(1.day, 'tweet.job', :at => ['5:30', '21:00'])
+  every(1.day, 'tweet.job', :at => ['5:00', '22:00'])
 end
