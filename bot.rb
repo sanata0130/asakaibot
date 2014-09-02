@@ -1,15 +1,13 @@
 require 'date'
-require 'yaml'
 require 'twitter'
+require 'foreman'
 require 'clockwork'
 
-keys = YAML.load_file('config.yml')
-
 @client = Twitter::REST::Client.new do |config|
-  config.consumer_key = keys['twitter']['consumer_key']
-  config.consumer_secret = keys['twitter']['consumer_secret']
-  config.access_token = keys['twitter']['access_token']
-  config.access_token_secret = keys['twitter']['access_token_secret']
+  config.consumer_key = ENV['TWITTER_CONSUMER_KEY']
+  config.consumer_secret = ENV['TWITTER_CONSUMER_SECRET']
+  config.access_token = ENV['TWITTER_OAUTH_TOKEN']
+  config.access_token_secret = ENV['TWITTER_OAUTH_TOKEN_SECRET']
 end
 
 def week_of_month(date)
