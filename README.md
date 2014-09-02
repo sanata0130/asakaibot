@@ -1,4 +1,1 @@
-asakaibot
-=========
-
-朝会bot
+# Asakai bot
