@@ -1,12 +1,11 @@
 require 'date'
 require 'yaml'
 require 'twitter'
-# require 'clockwork'
-# include Clockwork
+require 'clockwork'
 
 keys = YAML.load_file('config.yml')
 
-client = Twitter::REST::Client.new do |config|
+@client = Twitter::REST::Client.new do |config|
   config.consumer_key = keys['twitter']['consumer_key']
   config.consumer_secret = keys['twitter']['consumer_secret']
   config.access_token = keys['twitter']['access_token']
@@ -32,18 +31,20 @@ def update(client, tweet)
   client.update("朝会#{tweet}です。8:30に出社しましょう。")
 end
 
-# handler do |job|
-  today = Date.today
-  tomorrow = today + 1
+module Clockwork
+  handler do |job|
+    today = Date.today
+    tomorrow = today + 1
 
-  week_today = week_of_month(today)
-  week_tomorrow = week_of_month(tomorrow)
+    week_today = week_of_month(today)
+    week_tomorrow = week_of_month(tomorrow)
 
-  if week_tomorrow == 2 && today.wday == 1 then
-    update(client, '1日前')
-  elsif week_today == 2 && today.wday == 1 then
-    update(client, '当日')
+    if week_tomorrow == 2 && tomorrow.wday == 1 then
+      update(client, '1日前')
+    elsif week_today == 2 && today.wday == 1 then
+      update(client, '当日')
+    end
   end
-# end
 
-# every(1.day, 'tweet.job')
+  every(1.day, 'tweet.job', :at => ['5:30', '21:00'])
+end
