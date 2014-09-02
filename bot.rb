@@ -13,29 +13,28 @@ client = Twitter::REST::Client.new do |config|
   config.access_token_secret = keys['twitter']['access_token_secret']
 end
 
+def week_of_month(date)
+  first_week = (date - (date.day - 1)).cweek
+  this_week = date.cweek
+
+  if this_week < first_week
+
+    if date.month == 12
+      return week_of_month(date - 7) + 1
+    else
+      return this_week + 1
+    end
+  end
+  return this_week - first_week + 1
+end
+
+def update(client, tweet)
+  client.update("朝会#{tweet}です。8:30に出社しましょう。")
+end
+
 # handler do |job|
   today = Date.today
   tomorrow = today + 1
-
-  def week_of_month(date)
-    p date
-    first_week = (date - (date.day - 1)).cweek
-    this_week = date.cweek
-
-    if this_week < first_week
-
-      if date.month == 12
-        return week_of_month(date - 7) + 1
-      else
-        return this_week + 1
-      end
-    end
-    return this_week - first_week + 1
-  end
-
-  def update(client, tweet)
-    client.update("朝会#{tweet}です。8:30に出社しましょう。")
-  end
 
   week_today = week_of_month(today)
   week_tomorrow = week_of_month(tomorrow)
